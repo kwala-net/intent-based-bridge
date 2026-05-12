@@ -1,0 +1,191 @@
+// Hand-written ABIs matching contracts/src/*.sol
+// Overwritten by `pnpm gen-abis` after `forge build`.
+
+export const INTENT_ESCROW_ABI = [
+  {
+    type: 'constructor',
+    inputs: [{ name: 'owner_', type: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'createIntent',
+    inputs: [
+      { name: 'inputToken',   type: 'address' },
+      { name: 'inputAmount',  type: 'uint256' },
+      { name: 'dstChainId',   type: 'uint256' },
+      { name: 'outputToken',  type: 'address' },
+      { name: 'outputAmount', type: 'uint256' },
+      { name: 'recipient',    type: 'address' },
+      { name: 'fillDeadline', type: 'uint32'  },
+    ],
+    outputs: [{ name: 'intentId', type: 'bytes32' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'fillIntent',
+    inputs: [
+      { name: 'intentId',      type: 'bytes32' },
+      { name: 'originChainId', type: 'uint256' },
+      { name: 'recipient',     type: 'address' },
+      { name: 'outputToken',   type: 'address' },
+      { name: 'outputAmount',  type: 'uint256' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'reclaim',
+    inputs: [{ name: 'intentId', type: 'bytes32' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'ownerWithdraw',
+    inputs: [
+      { name: 'token',  type: 'address' },
+      { name: 'amount', type: 'uint256' },
+      { name: 'to',     type: 'address' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'filled',
+    inputs: [{ name: '', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'intents',
+    inputs: [{ name: '', type: 'bytes32' }],
+    outputs: [
+      { name: 'user',         type: 'address' },
+      { name: 'inputToken',   type: 'address' },
+      { name: 'inputAmount',  type: 'uint256' },
+      { name: 'dstChainId',   type: 'uint256' },
+      { name: 'outputToken',  type: 'address' },
+      { name: 'outputAmount', type: 'uint256' },
+      { name: 'recipient',    type: 'address' },
+      { name: 'fillDeadline', type: 'uint32'  },
+      { name: 'reclaimed',    type: 'bool'    },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'nonces',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    name: 'IntentCreated',
+    inputs: [
+      { name: 'intentId',    type: 'bytes32', indexed: true  },
+      { name: 'user',        type: 'address', indexed: true  },
+      { name: 'inputToken',  type: 'address', indexed: false },
+      { name: 'inputAmount', type: 'uint256', indexed: false },
+      { name: 'dstChainId',  type: 'uint256', indexed: false },
+      { name: 'outputToken', type: 'address', indexed: false },
+      { name: 'outputAmount',type: 'uint256', indexed: false },
+      { name: 'recipient',   type: 'address', indexed: false },
+      { name: 'fillDeadline',type: 'uint32',  indexed: false },
+      { name: 'nonce',       type: 'uint256', indexed: false },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'IntentFilled',
+    inputs: [
+      { name: 'intentId',      type: 'bytes32', indexed: true  },
+      { name: 'originChainId', type: 'uint256', indexed: true  },
+      { name: 'relayer',       type: 'address', indexed: true  },
+      { name: 'recipient',     type: 'address', indexed: false },
+      { name: 'outputToken',   type: 'address', indexed: false },
+      { name: 'outputAmount',  type: 'uint256', indexed: false },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'IntentReclaimed',
+    inputs: [
+      { name: 'intentId', type: 'bytes32', indexed: true },
+      { name: 'user',     type: 'address', indexed: true },
+    ],
+  },
+] as const
+
+export const MOCK_USDC_ABI = [
+  {
+    type: 'function',
+    name: 'mint',
+    inputs: [
+      { name: 'to',     type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'faucet',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'approve',
+    inputs: [
+      { name: 'spender', type: 'address' },
+      { name: 'amount',  type: 'uint256' },
+    ],
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'allowance',
+    inputs: [
+      { name: 'owner',   type: 'address' },
+      { name: 'spender', type: 'address' },
+    ],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'balanceOf',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'decimals',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'symbol',
+    inputs: [],
+    outputs: [{ name: '', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'lastFaucet',
+    inputs: [{ name: '', type: 'address' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+] as const
