@@ -3,8 +3,8 @@
 .PHONY: install build test deploy-sepolia deploy-fuji manual-fill
 
 install:
-	forge install OpenZeppelin/openzeppelin-contracts@v5.0.1 --no-commit
-	forge install foundry-rs/forge-std --no-commit
+	forge install OpenZeppelin/openzeppelin-contracts@v5.0.1
+	forge install foundry-rs/forge-std
 
 build:
 	forge build

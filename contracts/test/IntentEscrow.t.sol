@@ -86,7 +86,8 @@ contract IntentEscrowTest is Test {
         escrow.reclaim(intentId);
 
         assertEq(token.balanceOf(user), before + INPUT_AMOUNT);
-        assertTrue(escrow.intents(intentId).reclaimed);
+        (,,,,,,,,bool reclaimed) = escrow.intents(intentId);
+        assertTrue(reclaimed);
     }
 
     function test_reclaimBeforeDeadlineReverts() public {

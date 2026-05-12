@@ -20,7 +20,7 @@ contract MockUSDC is ERC20 {
 
     /// @notice Self-service faucet: 10,000 mUSDC once per day per address.
     function faucet() external {
-        require(block.timestamp >= lastFaucet[msg.sender] + 1 days, "faucet: once per day");
+        require(block.timestamp >= lastFaucet[msg.sender] + 1 minutes, "faucet: once per minute");
         lastFaucet[msg.sender] = block.timestamp;
         _mint(msg.sender, 10_000 * 1e18);
     }
