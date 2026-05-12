@@ -16,15 +16,14 @@ import {IntentEscrow} from "../src/IntentEscrow.sol";
  */
 contract Deploy is Script {
     function run() external {
-        uint256 deployerKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
-        address deployer    = vm.addr(deployerKey);
-
-        vm.startBroadcast(deployerKey);
+        // msg.sender is the address derived from the --private-key CLI flag.
+        // No vm.envUint needed — forge handles key injection externally.
+        vm.startBroadcast();
 
         MockUSDC mockUsdc     = new MockUSDC();
-        IntentEscrow escrow   = new IntentEscrow(deployer);
+        IntentEscrow escrow   = new IntentEscrow(msg.sender);
 
-        mockUsdc.mint(deployer, 1_000_000 * 1e18);
+        mockUsdc.mint(msg.sender, 1_000_000 * 1e18);
 
         vm.stopBroadcast();
 

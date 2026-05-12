@@ -3,11 +3,7 @@ import { readIntents, updateIntent } from '@/lib/storage'
 
 // Called by Kwala on a schedule (e.g. every 30 seconds).
 // Marks pending intents whose fillDeadline has passed as expired.
-export async function POST(req: NextRequest) {
-  if (req.headers.get('x-webhook-secret') !== process.env.WEBHOOK_SECRET) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
-  }
-
+export async function POST(_req: NextRequest) {
   const now = Math.floor(Date.now() / 1000)
   const intents = readIntents()
   const expired: string[] = []

@@ -3,10 +3,6 @@ import { updateIntent } from '@/lib/storage'
 import { WebhookFillPayload } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  if (req.headers.get('x-webhook-secret') !== process.env.WEBHOOK_SECRET) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
-  }
-
   const body: WebhookFillPayload = await req.json()
   const { intentId, txHash } = body
 

@@ -92,7 +92,6 @@ the Kwala fill-webhook would normally fire. To simulate the webhook too:
 ```bash
 curl -X POST http://localhost:3000/api/webhooks/fill \
   -H "Content-Type: application/json" \
-  -H "X-Webhook-Secret: $WEBHOOK_SECRET" \
   -d '{
     "intentId": "0x...",
     "originChainId": 11155111,

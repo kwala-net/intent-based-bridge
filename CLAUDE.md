@@ -87,13 +87,12 @@ The YAML workflows live outside this repo. High-level description:
 
 **Workflow B (notifier)**
 - Trigger: `IntentFilled` event on Sepolia / Fuji.
-- Action: HTTP POST to `$NEXT_PUBLIC_BACKEND_URL/api/webhooks/fill` with header
-  `X-Webhook-Secret: $WEBHOOK_SECRET`.
+- Action: HTTP POST to `$NEXT_PUBLIC_BACKEND_URL/api/webhooks/fill`.
 - Body fields map 1:1 to event params plus `txHash` and `chainId` from tx context.
 
 **Expiry cron**
 - Trigger: Kwala schedule (e.g. every 30 s).
-- Action: HTTP POST to `/api/cron/expire` with the same `X-Webhook-Secret` header.
+- Action: HTTP POST to `/api/cron/expire` (no auth header — Kwala cannot send custom headers).
 
 ## Where to look first when extending
 
