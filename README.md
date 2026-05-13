@@ -64,13 +64,21 @@ Open http://localhost:3000.
 Before Kwala workflows are configured you can simulate the relayer manually.
 
 **One-time setup** (do this once per destination chain):
+
+> **Why approve?** `fillIntent` calls `safeTransferFrom(relayerWallet, recipient, outputAmount)` on
+> the output token, so the IntentEscrow must be approved as a spender on the relayer wallet before
+> any fill can succeed. A max approval means this only needs to happen once.
+> If the Kwala relayer uses a SmartWallet, run this from that SmartWallet address — the allowance
+> is checked against whoever calls `fillIntent`, not your EOA.
+> Since MockUSDC has a permissionless `mint()`, the relayer can also mint tokens on the destination
+> chain as needed rather than maintaining a pre-funded inventory.
+
 ```bash
-# The deployer wallet needs mUSDC on Fuji and must approve the escrow
-# Approve escrow to spend deployer's mUSDC on Fuji:
+# Approve escrow to spend relayer's mUSDC on Fuji (one-time):
 cast send $NEXT_PUBLIC_MOCK_USDC_FUJI \
   "approve(address,uint256)" \
   $NEXT_PUBLIC_INTENT_ESCROW_FUJI \
-  1000000000000000000000000 \
+  115792089237316195423570985008687907853269984665640564039457584007913129639935 \
   --rpc-url $FUJI_RPC_URL \
   --private-key $DEPLOYER_PRIVATE_KEY
 ```

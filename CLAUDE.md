@@ -39,6 +39,7 @@ IntentEscrow (Fuji)
     ▼
 Next.js API route (/api/webhooks/fill)
     │  updates data/intents.json → status: "filled"
+    |  (TODO later: emits IntentFilled on source chain (Sepolia) too to maintain cross-chain composability)
     │
     ▼
 Frontend (polls GET /api/intent/:id every 3 s)
