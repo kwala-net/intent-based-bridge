@@ -90,6 +90,11 @@ export const INTENT_ESCROW_ABI = [
         "name": "outputAmount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "inventory",
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -367,6 +372,12 @@ export const INTENT_ESCROW_ABI = [
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      },
+      {
+        "name": "inventory",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
       }
     ],
     "anonymous": false

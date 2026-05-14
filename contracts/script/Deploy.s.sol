@@ -2,33 +2,23 @@
 pragma solidity ^0.8.24;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {MockUSDC}     from "../src/MockUSDC.sol";
 import {IntentEscrow} from "../src/IntentEscrow.sol";
 
 /**
- * @notice Deploy MockUSDC + IntentEscrow and seed the deployer with 1M mUSDC.
+ * @notice Deploy IntentEscrow only. MockUSDC is already deployed on both chains —
+ *         keep the existing addresses in .env.
  *
- * After running, copy the printed addresses into .env:
- *   NEXT_PUBLIC_MOCK_USDC_<NETWORK>=<address>
+ * After running, copy the printed address into .env:
  *   NEXT_PUBLIC_INTENT_ESCROW_<NETWORK>=<address>
  *
- * Then run: pnpm gen-abis
+ * Then run: npm run gen-abis
  */
 contract Deploy is Script {
     function run() external {
-        // msg.sender is the address derived from the --private-key CLI flag.
-        // No vm.envUint needed — forge handles key injection externally.
         vm.startBroadcast();
-
-        MockUSDC mockUsdc     = new MockUSDC();
-        IntentEscrow escrow   = new IntentEscrow(msg.sender);
-
-        mockUsdc.mint(msg.sender, 1_000_000 * 1e18);
-
+        IntentEscrow escrow = new IntentEscrow(msg.sender);
         vm.stopBroadcast();
 
-        // Parseable output — copy these into .env
-        console2.log("MOCK_USDC=%s",     address(mockUsdc));
         console2.log("INTENT_ESCROW=%s", address(escrow));
         console2.log("CHAIN_ID=%s",      block.chainid);
     }

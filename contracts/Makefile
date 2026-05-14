@@ -27,8 +27,9 @@ deploy-fuji:
 		-vvvv
 
 # Fill an intent manually (simulates the relayer before Kwala is wired up).
-# Prerequisites: deployer must hold outputToken on the destination chain and
-# must have approved the IntentEscrow contract to spend it.
+# Prerequisites: the INVENTORY wallet must hold outputToken on the destination
+# chain and must have approved the IntentEscrow contract to spend it. The caller
+# (DEPLOYER_PRIVATE_KEY here) does not need to hold or approve anything.
 #
 # Usage:
 #   make manual-fill \
@@ -37,18 +38,19 @@ deploy-fuji:
 #     ORIGIN_CHAIN_ID=11155111 \
 #     RECIPIENT=0x... \
 #     OUTPUT_TOKEN=0x... \
-#     OUTPUT_AMOUNT=998000000000000000
+#     OUTPUT_AMOUNT=998000000000000000 \
+#     INVENTORY=0x...
 manual-fill:
 	@if [ "$(CHAIN)" = "fuji" ]; then \
 		cast send $(NEXT_PUBLIC_INTENT_ESCROW_FUJI) \
-			"fillIntent(bytes32,uint256,address,address,uint256)" \
-			$(INTENT_ID) $(ORIGIN_CHAIN_ID) $(RECIPIENT) $(OUTPUT_TOKEN) $(OUTPUT_AMOUNT) \
+			"fillIntent(bytes32,uint256,address,address,uint256,address)" \
+			$(INTENT_ID) $(ORIGIN_CHAIN_ID) $(RECIPIENT) $(OUTPUT_TOKEN) $(OUTPUT_AMOUNT) $(INVENTORY) \
 			--rpc-url $(FUJI_RPC_URL) \
 			--private-key $(DEPLOYER_PRIVATE_KEY); \
 	elif [ "$(CHAIN)" = "sepolia" ]; then \
 		cast send $(NEXT_PUBLIC_INTENT_ESCROW_SEPOLIA) \
-			"fillIntent(bytes32,uint256,address,address,uint256)" \
-			$(INTENT_ID) $(ORIGIN_CHAIN_ID) $(RECIPIENT) $(OUTPUT_TOKEN) $(OUTPUT_AMOUNT) \
+			"fillIntent(bytes32,uint256,address,address,uint256,address)" \
+			$(INTENT_ID) $(ORIGIN_CHAIN_ID) $(RECIPIENT) $(OUTPUT_TOKEN) $(OUTPUT_AMOUNT) $(INVENTORY) \
 			--rpc-url $(SEPOLIA_RPC_URL) \
 			--private-key $(DEPLOYER_PRIVATE_KEY); \
 	else \

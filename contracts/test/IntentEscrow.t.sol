@@ -55,7 +55,7 @@ contract IntentEscrowTest is Test {
 
         uint256 before = token.balanceOf(recipient);
         vm.prank(relayer);
-        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT);
+        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT, relayer);
 
         assertEq(token.balanceOf(recipient), before + OUTPUT_AMOUNT);
         assertTrue(escrow.filled(intentId));
@@ -65,11 +65,30 @@ contract IntentEscrowTest is Test {
         bytes32 intentId = _createIntent();
 
         vm.prank(relayer);
-        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT);
+        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT, relayer);
 
         vm.prank(relayer);
         vm.expectRevert("already filled");
-        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT);
+        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT, relayer);
+    }
+
+    function test_fillFromSeparateInventory() public {
+        // Caller (msg.sender) and inventory are different wallets.
+        address caller    = makeAddr("caller");
+        address inventory = makeAddr("inventory");
+
+        token.mint(inventory, OUTPUT_AMOUNT * 10);
+        vm.prank(inventory);
+        token.approve(address(escrow), type(uint256).max);
+
+        bytes32 intentId = _createIntent();
+
+        uint256 before = token.balanceOf(recipient);
+        vm.prank(caller);
+        escrow.fillIntent(intentId, block.chainid, recipient, address(token), OUTPUT_AMOUNT, inventory);
+
+        assertEq(token.balanceOf(recipient), before + OUTPUT_AMOUNT);
+        assertEq(token.balanceOf(inventory), OUTPUT_AMOUNT * 10 - OUTPUT_AMOUNT);
     }
 
     function test_reclaimAfterDeadline() public {

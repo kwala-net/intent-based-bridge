@@ -71,7 +71,8 @@ contract IntentEscrow is Ownable {
         address indexed relayer,
         address recipient,
         address outputToken,
-        uint256 outputAmount
+        uint256 outputAmount,
+        address inventory
     );
 
     /// @notice Emitted on the origin chain when a user reclaims expired escrow.
@@ -164,22 +165,29 @@ contract IntentEscrow is Ownable {
     // ── Destination-chain functions ───────────────────────────────────────────
 
     /**
-     * @notice Pull outputToken from the relayer and deliver to recipient.
-     * @dev Relayer must approve this contract before calling.
+     * @notice Pull outputToken from the inventory wallet and deliver to recipient.
+     * @dev The inventory wallet (passed as the last param) must approve this
+     *      contract for at least outputAmount before this call. msg.sender (the
+     *      caller / Kwala SmartWallet) does not need to hold or approve anything.
+     *
+     * WARNING: There is no caller whitelist. Any address that approves this
+     * contract is trusting every possible msg.sender to spend that allowance
+     * honestly. Treat the inventory wallet's approval as "globally drainable".
      */
     function fillIntent(
         bytes32 intentId,
         uint256 originChainId,
         address recipient,
         address outputToken,
-        uint256 outputAmount
+        uint256 outputAmount,
+        address inventory
     ) external {
         require(!filled[intentId], "already filled");
         filled[intentId] = true;
 
-        IERC20(outputToken).safeTransferFrom(msg.sender, recipient, outputAmount);
+        IERC20(outputToken).safeTransferFrom(inventory, recipient, outputAmount);
 
-        emit IntentFilled(intentId, originChainId, msg.sender, recipient, outputToken, outputAmount);
+        emit IntentFilled(intentId, originChainId, msg.sender, recipient, outputToken, outputAmount, inventory);
     }
 
     // ── Owner functions ───────────────────────────────────────────────────────
