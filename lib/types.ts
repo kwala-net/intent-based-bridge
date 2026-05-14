@@ -16,6 +16,7 @@ export interface Intent {
   depositTxHash?: string
   fillTxHash?: string
   filledAt?: string    // ISO string
+  inventory?: string   // destination-chain wallet whose allowance funded the fill
   createdAt: string    // ISO string
 }
 
@@ -42,6 +43,7 @@ export interface WebhookFillPayload {
   recipient: string      // IntentFilled.recipient
   outputToken: string    // IntentFilled.outputToken
   outputAmount: string   // IntentFilled.outputAmount (as decimal string)
+  inventory: string      // IntentFilled.inventory — destination-chain wallet that paid
   txHash: string         // from tx context
   chainId: number        // destination chain id, from tx context
 }

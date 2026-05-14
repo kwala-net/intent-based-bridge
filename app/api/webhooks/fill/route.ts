@@ -4,12 +4,13 @@ import { WebhookFillPayload } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
   const body: WebhookFillPayload = await req.json()
-  const { intentId, txHash } = body
+  const { intentId, txHash, inventory } = body
 
   const updated = updateIntent(intentId, {
     status:    'filled',
     fillTxHash: txHash,
     filledAt:  new Date().toISOString(),
+    inventory,
   })
 
   if (!updated) {
