@@ -33,17 +33,3 @@ export interface QuoteResponse {
   feeBps: number
   fillDeadline: number
 }
-
-// Shape of the body Kwala POSTs to /api/webhooks/fill.
-// Every field here is either an event param or derivable from tx context.
-export interface WebhookFillPayload {
-  intentId: string       // IntentFilled.intentId  (indexed bytes32)
-  originChainId: number  // IntentFilled.originChainId (indexed uint256)
-  relayer: string        // IntentFilled.relayer (indexed address)
-  recipient: string      // IntentFilled.recipient
-  outputToken: string    // IntentFilled.outputToken
-  outputAmount: string   // IntentFilled.outputAmount (as decimal string)
-  inventory: string      // IntentFilled.inventory — destination-chain wallet that paid
-  txHash: string         // from tx context
-  chainId: number        // destination chain id, from tx context
-}

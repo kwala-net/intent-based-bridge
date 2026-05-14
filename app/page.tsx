@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { BridgeForm } from './components/BridgeForm'
@@ -12,6 +12,20 @@ import type { Intent } from '@/lib/types'
 export default function Home() {
   const [activeIntent, setActiveIntent] = useState<Intent | null>(null)
   const [faucetMsg, setFaucetMsg] = useState<string | null>(null)
+
+  // Hydrate the last in-flight intent from localStorage so a refresh doesn't
+  // drop the user out of the status view mid-bridge.
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('activeIntent')
+      if (stored) setActiveIntent(JSON.parse(stored))
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    if (activeIntent) localStorage.setItem('activeIntent', JSON.stringify(activeIntent))
+    else localStorage.removeItem('activeIntent')
+  }, [activeIntent])
 
   const { isConnected } = useAccount()
   const chainId = useChainId()
