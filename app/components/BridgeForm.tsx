@@ -98,8 +98,17 @@ export function BridgeForm({ onIntentCreated }: Props) {
           functionName: 'approve',
           args: [srcChain.intentEscrow as `0x${string}`, inputAmount],
         })
-        await waitForTransactionReceipt(wagmiConfig, { hash: approveTx })
-        await refetchAllowance()
+        // Bounded wait — viem's default poll can stall on flaky receipt lookups
+        // even after the tx has mined. We cap it so the bridge step is reached.
+        await waitForTransactionReceipt(wagmiConfig, {
+          hash: approveTx,
+          timeout: 60_000,
+          pollingInterval: 2_000,
+        })
+        // Fire-and-forget — the closure already has the old allowance value but
+        // we don't re-read it below; refetch is purely to keep the UI in sync
+        // on the next render. Awaiting it can deadlock with wagmi's watch-refresh.
+        refetchAllowance()
       }
 
       // Step 2: create intent
